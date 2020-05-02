@@ -3,9 +3,12 @@ from markupsafe import escape
 import os
 import requests
 import random
-
+from flask_basicauth import BasicAuth
 app = Flask(__name__)
-
+app.config['BASIC_AUTH_USERNAME'] = 'palermo'
+app.config['BASIC_AUTH_PASSWORD'] = '123456'
+basic_auth = BasicAuth(app)
+app.config['BASIC_AUTH_FORCE'] = True
 players={}
 dead={}
 game_started = False
