@@ -1,0 +1,41 @@
+<html>
+
+<head>
+
+</head>
+<title>
+    Palermo
+</title>
+
+<body>
+
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username"><br>
+    <button type="button" onclick="get_state()">Get State</button>
+
+    <p><span>Players: </span><span id="players"></span></p>
+    <p><span>Dead: </span><span id="dead"></span></p>
+    <p><span>Role: </span><span id="role"></span></p>
+    <br>
+    <script>
+         function get_state() {
+            var username = document.getElementById("username").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var state = JSON.parse(this.responseText);
+                    document.getElementById("players").innerHTML = state.players;
+                    document.getElementById("role").innerHTML = state.role;
+                    document.getElementById("dead").innerHTML = JSON.stringify(state.dead);
+                }
+            };
+            xhttp.open("POST", "/palermo/state", true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify(username));
+        }
+    </script>
+
+
+</body>
+
+</html>

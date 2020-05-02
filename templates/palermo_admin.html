@@ -1,0 +1,75 @@
+<html>
+
+<head>
+
+</head>
+<title>
+    Palermo
+</title>
+
+<body>
+
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username"><br>
+    <button type="button" onclick="get_state()">Get State</button>
+
+    <p><span>Players: </span><span id="players"></span></p>
+    <p><span>Dead: </span><span id="dead"></span></p>
+    <p><span>Role: </span><span id="role"></span></p>
+    <br>
+    <h2>Admin operations</h2>
+    <br>
+    <label for="roles">Roles:</label><br>
+    <input type="text" id="roles" name="roles" size=150><br>
+    <button type="button" onclick="start()">Start Game</button>
+    <button type="button" onclick="reset()">Reset Game</button>
+
+    <br>
+    <label for="player_to_kick">Kill:</label><br>
+    <input type="text" id="player_to_kill" name="player_to_kill"><br>
+    <button type="button" onclick="kill_hide()">Kill Hide</button>
+    <button type="button" onclick="kill_show()">Kill Show</button>
+    <script>
+        function get_state() {
+            var username = document.getElementById("username").value;
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var state = JSON.parse(this.responseText);
+                    document.getElementById("players").innerHTML = state.players;
+                    document.getElementById("role").innerHTML = state.role;
+                    document.getElementById("dead").innerHTML = JSON.stringify(state.dead);
+                }
+            };
+            xhttp.open("POST", "/palermo/state", true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify(username));
+        }
+        function start() {
+            var xhttp = new XMLHttpRequest();
+            var roles = document.getElementById("roles").value.split(",");
+            xhttp.open("POST", "/palermo/admin/start", true);
+            xhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhttp.send(JSON.stringify(roles));
+        }
+        function reset() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "/palermo/admin/reset", true);
+            xhttp.send();
+        }
+        function kill_show() {
+            var xhttp = new XMLHttpRequest();
+            var username = document.getElementById("player_to_kill").value
+            xhttp.open("POST", "/palermo/admin/kill_show/" + username, true);
+            xhttp.send();
+        }
+        function kill_hide() {
+            var xhttp = new XMLHttpRequest();
+            var username = document.getElementById("player_to_kill").value
+            xhttp.open("POST", "/palermo/admin/kill_hide/" + username, true);
+            xhttp.send();
+        }
+    </script>
+</body>
+
+</html>
